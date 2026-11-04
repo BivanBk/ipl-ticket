@@ -1,0 +1,265 @@
+
+/* General Styling */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: #f4f6fb;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Header */
+header {
+    background-color: #101b3d;
+    color: white;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+header h1 {
+    color: #ffcc00;
+    font-size: 26px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 10px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: #ffcc00;
+}
+
+/* Horizontal Line */
+hr {
+    border: 1px solid #ddd;
+}
+
+/* Sections */
+section {
+    padding: 50px 7%;
+}
+
+section h2 {
+    text-align: center;
+    color: #101b3d;
+    font-size: 30px;
+    margin-bottom: 25px;
+}
+
+section h3 {
+    color: #263e80;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Hero Section */
+section:first-of-type {
+    background-color: #182d61;
+    color: white;
+    text-align: center;
+    padding: 100px 20px;
+}
+
+section:first-of-type h1 {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+section:first-of-type p {
+    font-size: 18px;
+    margin-bottom: 25px;
+}
+
+section:first-of-type a {
+    display: inline-block;
+    background-color: #ffcc00;
+    color: #101b3d;
+    padding: 12px 25px;
+    margin: 8px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* About Section */
+#about {
+    background-color: white;
+}
+
+ul {
+    margin-left: 35px;
+    margin-bottom: 20px;
+}
+
+/* Match Schedule */
+#matches {
+    background-color: #f4f6fb;
+}
+
+select,
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    margin-top: 20px;
+}
+
+th {
+    background-color: #101b3d;
+    color: white;
+}
+
+th, td {
+    padding: 13px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: #edf0f8;
+}
+
+td a {
+    background-color: #ffcc00;
+    color: #101b3d;
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+/* Booking Form */
+#booking {
+    background-color: white;
+}
+
+form {
+    max-width: 600px;
+    margin: auto;
+    background-color: #f4f6fb;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+form label {
+    display: block;
+    font-weight: bold;
+    margin-top: 12px;
+}
+
+form input,
+form select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+}
+
+input[type="submit"] {
+    background-color: #101b3d;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    margin-top: 20px;
+}
+
+input[type="submit"]:hover {
+    background-color: #263e80;
+}
+
+/* Booking Summary */
+#booking + hr + section {
+    background-color: #edf0f8;
+    text-align: center;
+}
+
+#booking + hr + section p {
+    margin: 10px;
+    font-size: 17px;
+}
+
+/* My Bookings */
+#mybookings {
+    background-color: white;
+}
+
+/* Guidelines */
+#guidelines {
+    background-color: #f4f6fb;
+}
+
+#guidelines h3 {
+    background-color: white;
+    padding: 15px;
+    border-left: 5px solid #ffcc00;
+    border-radius: 5px;
+}
+
+#guidelines p {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+/* Footer */
+footer {
+    background-color: #101b3d;
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav {
+        text-align: center;
+    }
+
+    nav a {
+        display: inline-block;
+        margin: 5px;
+    }
+
+    section:first-of-type h1 {
+        font-size: 28px;
+    }
+
+    section {
+        padding: 30px 5%;
+    }
+
+    table {
+        min-width: 750px;
+    }
+
+    #matches {
+        overflow-x: auto;
+    }
+
+}
