@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IPL Ticket Booking | Book Your Seats</title>
+    <style>
+        /* Clean, responsive styling so your screenshots look great */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #19398a;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header a {
+            color: #ffcb05;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: white;
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #19398a;
+            margin-top: 0;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        /* Visual feedback for valid/invalid fields once interacted with */
+        input:focus:invalid, select:focus:invalid {
+            border-color: #d9534f;
+            outline: none;
+        }
+        input:focus:valid, select:focus:valid {
+            border-color: #5cb85c;
+            outline: none;
+        }
+        .inline-options label {
+            display: inline-block;
+            font-weight: normal;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .button-group {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button[type="submit"] {
+            background-color: #19398a;
+            color: white;
+            flex: 2;
+        }
+        button[type="submit"]:hover {
+            background-color: #122863;
+        }
+        button[type="reset"] {
+            background-color: #e0e0e0;
+            color: #333;
+            flex: 1;
+        }
+        button[type="reset"]:hover {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div><strong>IPL 2026 Official Ticket Portal</strong></div>
+        <nav>
+            <a href="index.html">&larr; Back to Home</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h2>Book Match Tickets</h2>
+
+        <!-- Ticket Booking Form -->
+        <form action="#" method="POST">
+            
+            <!-- Name: Text input with required, minlength, and maxlength -->
+            <div class="form-group">
+                <label for="fullName">Full Name *</label>
+                <input 
+                    type="text" 
+                    id="fullName" 
+                    name="fullName" 
+                    placeholder="Enter your full name" 
+                    minlength="3" 
+                    maxlength="50" 
+                    required>
+            </div>
+
+            <!-- Email: Email input with built-in format validation -->
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    placeholder="example@domain.com" 
+                    required>
+            </div>
+
+            <!-- Phone Number: Tel input with 10-digit pattern, minlength, and maxlength -->
+            <div class="form-group">
+                <label for="phone">Phone Number (10 digits) *</label>
+                <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    placeholder="9876543210" 
+                    pattern="[0-9]{10}" 
+                    minlength="10" 
+                    maxlength="10" 
+                    title="Please enter a valid 10-digit mobile number" 
+                    required>
+            </div>
+
+            <!-- Match Selection: Dropdown (<select>) -->
+            <div class="form-group">
+                <label for="match">Select Match *</label>
+                <select id="match" name="match" required>
+                    <option value="">-- Choose an IPL Match --</option>
+                    <option value="RCB_vs_CSK">Match 1: RCB vs CSK (M. Chinnaswamy Stadium, Bengaluru)</option>
+                    <option value="MI_vs_KKR">Match 2: MI vs KKR (Wankhede Stadium, Mumbai)</option>
+                    <option value="SRH_vs_RR">Match 3: SRH vs RR (Rajiv Gandhi Intl. Stadium, Hyderabad)</option>
+                    <option value="GT_vs_DC">Match 4: GT vs DC (Narendra Modi Stadium, Ahmedabad)</option>
+                </select>
+            </div>
+
+            <!-- Stand Category: Dropdown (<select>) -->
+            <div class="form-group">
+                <label for="stand">Stand Category *</label>
+                <select id="stand" name="stand" required>
+                    <option value="">-- Choose Stand Category --</option>
+                    <option value="general">General Stand (₹1,200)</option>
+                    <option value="east_wing">East Wing Lower Tier (₹2,500)</option>
+                    <option value="pavilion">Pavilion Terrace (₹5,000)</option>
+                    <option value="vip_box">VIP Hospitality Box (₹12,000)</option>
+                </select>
+            </div>
+
+            <!-- Number of Tickets: Number input with min and max attributes -->
+            <div class="form-group">
+                <label for="tickets">Number of Tickets (1 to 6) *</label>
+                <input 
+                    type="number" 
+                    id="tickets" 
+                    name="tickets" 
+                    min="1" 
+                    max="6" 
+                    value="1" 
+                    required>
+            </div>
+
+            <!-- Ticket Delivery Mode: Radio Buttons -->
+            <div class="form-group inline-options">
+                <label>Ticket Delivery Preference *</label>
+                <label>
+                    <input type="radio" name="delivery" value="eticket" checked required> M-Ticket / E-Ticket
+                </label>
+                <label>
+                    <input type="radio" name="delivery" value="boxoffice"> Box Office Pickup
+                </label>
+            </div>
+
+            <!-- Add-ons & Terms: Checkboxes -->
+            <div class="form-group inline-options">
+                <label>Additional Preferences</label>
+                <label>
+                    <input type="checkbox" name="addons" value="merch"> Pre-book Official Team Jersey
+                </label>
+                <label>
+                    <input type="checkbox" name="addons" value="parking"> Stadium Parking Pass
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label style="font-weight: normal; cursor: pointer;">
+                    <input type="checkbox" name="terms" required> I agree to the IPL Stadium Entry Guidelines & Terms *
+                </label>
+            </div>
+
+            <!-- Submit and Reset Buttons -->
+            <div class="button-group">
+                <button type="submit">Confirm Booking</button>
+                <button type="reset">Reset Form</button>
+            </div>
+
+        </form>
+    </main>
+
+</body>
+</html>
