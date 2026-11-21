@@ -1,84 +1,140 @@
-// 1. Select Form Controls using DOM selectors (getElementById & querySelector)
-const bookingForm = document.getElementById('bookingForm');
-const matchSelect = document.getElementById('matchSelect');
-const standSelect = document.querySelector('#standSelect');
-const ticketQtyInput = document.querySelector('#ticketQty');
+// ==========================================
+// 1. Mobile Hamburger Menu Toggle
+// ==========================================
+const hamburgerBtn = document.getElementById("hamburgerBtn");
+const navLinks = document.getElementById("navLinks");
 
-// 2. Select Booking Summary Card display elements
-const summaryMatch = document.getElementById('summaryMatch');
-const summaryStand = document.getElementById('summaryStand');
-const summaryUnitPrice = document.getElementById('summaryUnitPrice');
-const summaryQty = document.getElementById('summaryQty');
-const summaryTotal = document.getElementById('summaryTotal');
+hamburgerBtn.addEventListener("click", () => {
+  const isOpen = navLinks.classList.toggle("active");
+  hamburgerBtn.setAttribute("aria-expanded", isOpen);
+});
 
-// Select Toast element
-const toastEl = document.getElementById('toast');
+// Close mobile menu when a nav link is clicked
+navLinks.querySelectorAll("a").forEach((link) => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("active");
+    hamburgerBtn.setAttribute("aria-expanded", "false");
+  });
+});
+
+// ==========================================
+// 2. Match Team Filter Logic
+// ==========================================
+const filterButtons = document.querySelectorAll(".filter-btn");
+const matchCards = document.querySelectorAll(".match-card");
+
+filterButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    // Update active filter button
+    filterButtons.forEach((b) => b.classList.remove("active"));
+    btn.classList.add("active");
+
+    const selectedTeam = btn.getAttribute("data-team");
+
+    matchCards.forEach((card) => {
+      const cardTeams = card.getAttribute("data-teams");
+      if (selectedTeam === "ALL" || cardTeams.includes(selectedTeam)) {
+        card.classList.remove("hidden");
+      } else {
+        card.classList.add("hidden");
+      }
+    });
+
+    showToast(selectedTeam === "ALL" ? "Showing all matches" : `Filtered matches for ${selectedTeam}`);
+  });
+});
+
+// ==========================================
+// 3. Grid vs. List View Toggle
+// ==========================================
+const matchGrid = document.getElementById("matchGrid");
+const gridViewBtn = document.getElementById("gridViewBtn");
+const listViewBtn = document.getElementById("listViewBtn");
+
+gridViewBtn.addEventListener("click", () => {
+  matchGrid.classList.remove("list-view");
+  gridViewBtn.classList.add("active");
+  listViewBtn.classList.remove("active");
+});
+
+listViewBtn.addEventListener("click", () => {
+  matchGrid.classList.add("list-view");
+  listViewBtn.classList.add("active");
+  gridViewBtn.classList.remove("active");
+});
+
+// ==========================================
+// 4. Booking Form & Live Summary (Activity 7 + Quick Select)
+// ==========================================
+const bookingForm = document.getElementById("bookingForm");
+const matchSelect = document.getElementById("matchSelect");
+const standSelect = document.querySelector("#standSelect");
+const ticketQtyInput = document.querySelector("#ticketQty");
+
+const summaryMatch = document.getElementById("summaryMatch");
+const summaryStand = document.getElementById("summaryStand");
+const summaryPrice = document.getElementById("summaryPrice");
+const summaryQty = document.getElementById("summaryQty");
+const summaryTotal = document.querySelector("#summaryTotal");
+
+const toastElement = document.getElementById("toast");
 let toastTimeout;
 
-/**
- * Displays a temporary toast message at the bottom-right corner
- * @param {string} message - Notification text to display
- */
 function showToast(message) {
-  toastEl.textContent = message;
-  toastEl.classList.add('show');
+  toastElement.textContent = message;
+  toastElement.classList.add("show");
 
   clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => {
-    toastEl.classList.remove('show');
+    toastElement.classList.remove("show");
   }, 2500);
 }
 
-/**
- * Reads selected dropdowns and quantity input, calculates total,
- * and updates the Booking Summary Card live.
- */
 function updateBookingSummary() {
-  // Read selected match
-  const selectedMatch = matchSelect.value || 'Not selected';
+  const selectedMatch = matchSelect.value || "Not selected";
+  const selectedOption = standSelect.options[standSelect.selectedIndex];
+  const selectedStand = standSelect.value || "Not selected";
+  const unitPrice = Number(selectedOption.getAttribute("data-price")) || 0;
 
-  // Read selected stand and its data-price attribute
-  const selectedStandOption = standSelect.options[standSelect.selectedIndex];
-  const selectedStandName = standSelect.value || 'Not selected';
-  const unitPrice = Number(selectedStandOption.getAttribute('data-price')) || 0;
-
-  // Read and sanitize quantity (ensure at least 1, max 10)
   let quantity = parseInt(ticketQtyInput.value, 10);
   if (isNaN(quantity) || quantity < 1) {
     quantity = 1;
-    ticketQtyInput.value = 1;
   } else if (quantity > 10) {
     quantity = 10;
     ticketQtyInput.value = 10;
   }
 
-  // Calculate total price
   const totalPrice = unitPrice * quantity;
 
-  // Update Booking Summary DOM elements
   summaryMatch.textContent = selectedMatch;
-  summaryStand.textContent = selectedStandName;
-  summaryUnitPrice.textContent = `₹${unitPrice.toLocaleString('en-IN')}`;
+  summaryStand.textContent = selectedStand;
+  summaryPrice.textContent = `₹${unitPrice.toLocaleString("en-IN")}`;
   summaryQty.textContent = quantity;
-  summaryTotal.textContent = `₹${totalPrice.toLocaleString('en-IN')}`;
+  summaryTotal.textContent = `₹${totalPrice.toLocaleString("en-IN")}`;
 
-  // Confirm live update via toast notification
-  showToast('Booking summary updated!');
+  showToast("Booking summary updated!");
 }
 
-// 3. Add 'change' event listeners to form controls
-matchSelect.addEventListener('change', updateBookingSummary);
-standSelect.addEventListener('change', updateBookingSummary);
-ticketQtyInput.addEventListener('change', updateBookingSummary);
+matchSelect.addEventListener("change", updateBookingSummary);
+standSelect.addEventListener("change", updateBookingSummary);
+ticketQtyInput.addEventListener("change", updateBookingSummary);
 
-// Optional: Prevent page reload on form submit and show confirmation toast
-bookingForm.addEventListener('submit', (event) => {
+// Pre-fill booking dropdown when clicking "Select Match" on any schedule card
+document.querySelectorAll(".card-cta").forEach((cta) => {
+  cta.addEventListener("click", () => {
+    const matchValue = cta.getAttribute("data-match");
+    if (matchValue) {
+      matchSelect.value = matchValue;
+      updateBookingSummary();
+    }
+  });
+});
+
+bookingForm.addEventListener("submit", (event) => {
   event.preventDefault();
-
   if (!matchSelect.value || !standSelect.value) {
-    showToast('Please select both a match and a stand category.');
+    showToast("Please select both a match and a stand category.");
     return;
   }
-
-  showToast(`Confirmed! ${ticketQtyInput.value} ticket(s) booked for ${matchSelect.value}.`);
+  showToast("Booking confirmed! Check your summary.");
 });

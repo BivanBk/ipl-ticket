@@ -3,240 +3,205 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IPL 2026 Ticket Booking</title>
-  <style>
-    :root {
-      --primary: #1a237e;
-      --accent: #ff6f00;
-      --bg: #f4f6f9;
-      --card-bg: #ffffff;
-      --text: #212121;
-      --muted: #616161;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      padding: 2rem 1rem;
-    }
-
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-
-    header h1 {
-      color: var(--primary);
-      font-size: 2rem;
-    }
-
-    main {
-      max-width: 900px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 700px) {
-      main {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    section {
-      background: var(--card-bg);
-      padding: 1.5rem;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-
-    h2 {
-      color: var(--primary);
-      margin-bottom: 1.25rem;
-      font-size: 1.3rem;
-      border-bottom: 2px solid #e8eaf6;
-      padding-bottom: 0.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 0.4rem;
-    }
-
-    select, input[type="number"] {
-      width: 100%;
-      padding: 0.65rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1rem;
-      background-color: #fff;
-    }
-
-    select:focus, input[type="number"]:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
-
-    /* Booking Summary Card Styling */
-    .summary-card {
-      background-color: #f8f9fa;
-      border-left: 5px solid var(--accent);
-      padding: 1.2rem;
-      border-radius: 6px;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 0.85rem;
-      font-size: 0.98rem;
-    }
-
-    .summary-row span:first-child {
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    .summary-row span:last-child {
-      font-weight: 600;
-      text-align: right;
-    }
-
-    .summary-total {
-      border-top: 1px dashed #bdbdbd;
-      padding-top: 0.85rem;
-      margin-top: 0.5rem;
-      font-size: 1.2rem;
-      color: var(--primary);
-    }
-
-    button.btn-book {
-      width: 100%;
-      margin-top: 1.2rem;
-      padding: 0.8rem;
-      background-color: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    button.btn-book:hover {
-      background-color: #283593;
-    }
-
-    /* Toast Notification Styling */
-    #toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background-color: #2e7d32;
-      color: #fff;
-      padding: 0.85rem 1.4rem;
-      border-radius: 6px;
-      font-weight: 500;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      opacity: 0;
-      transform: translateY(20px);
-      pointer-events: none;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    #toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+  <title>IPL 2026 — Official Match Schedule & Ticket Booking</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-  <header>
-    <h1>🏏 IPL 2026 Ticket Booking</h1>
-    <p>Select your match, stand category, and ticket quantity to see live pricing</p>
+  <!-- Flexbox Navbar with Mobile Hamburger -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">IPL<span>2026</span></a>
+
+      <button class="hamburger" id="hamburgerBtn" aria-label="Toggle navigation" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="#schedule">Match Schedule</a>
+        <a href="#guidelines">Stadium Guidelines</a>
+        <a href="#booking">Book Tickets</a>
+      </nav>
+    </div>
   </header>
 
-  <main>
-    <!-- Booking Form Section -->
-    <section aria-labelledby="form-heading">
-      <h2 id="form-heading">Select Match & Tickets</h2>
-      <form id="bookingForm">
-        <div class="form-group">
-          <label for="matchSelect">Select Match</label>
-          <select id="matchSelect" name="match" required>
-            <option value="" disabled selected>-- Choose an IPL Match --</option>
-            <option value="RCB vs CSK - M. Chinnaswamy Stadium (May 12)">RCB vs CSK - Bengaluru (May 12)</option>
-            <option value="MI vs KKR - Wankhede Stadium (May 15)">MI vs KKR - Mumbai (May 15)</option>
-            <option value="SRH vs RR - Rajiv Gandhi Stadium (May 18)">SRH vs RR - Hyderabad (May 18)</option>
-            <option value="GT vs LSG - Narendra Modi Stadium (May 21)">GT vs LSG - Ahmedabad (May 21)</option>
-          </select>
+  <main class="main-wrapper">
+
+    <!-- Section 1: Match Schedule (CSS Grid + Team Filter + Grid/List Toggle) -->
+    <section id="schedule" class="section">
+      <div class="section-header">
+        <div>
+          <h2>Upcoming Match Schedule</h2>
+          <p class="subtitle">Filter by your favorite franchise or switch layout views</p>
         </div>
 
-        <div class="form-group">
-          <label for="standSelect">Stand Category</label>
-          <select id="standSelect" name="stand" required>
-            <option value="" data-price="0" disabled selected>-- Choose Stand Category --</option>
-            <option value="General Stand" data-price="1200">General Stand - ₹1,200 / ticket</option>
-            <option value="East Pavilion" data-price="2500">East Pavilion - ₹2,500 / ticket</option>
-            <option value="Corporate Box" data-price="5500">Corporate Box - ₹5,500 / ticket</option>
-            <option value="VIP Hospitality" data-price="10000">VIP Hospitality - ₹10,000 / ticket</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="ticketQty">Ticket Quantity (Max 10)</label>
-          <input type="number" id="ticketQty" name="quantity" min="1" max="10" value="1" required />
-        </div>
-      </form>
-    </section>
-
-    <!-- Booking Summary Card Section -->
-    <section aria-labelledby="summary-heading">
-      <h2 id="summary-heading">Booking Summary</h2>
-      <div class="summary-card" id="bookingSummaryCard">
-        <div class="summary-row">
-          <span>Match:</span>
-          <span id="summaryMatch">Not selected</span>
-        </div>
-        <div class="summary-row">
-          <span>Stand Category:</span>
-          <span id="summaryStand">Not selected</span>
-        </div>
-        <div class="summary-row">
-          <span>Price per Ticket:</span>
-          <span id="summaryUnitPrice">₹0</span>
-        </div>
-        <div class="summary-row">
-          <span>Quantity:</span>
-          <span id="summaryQty">1</span>
-        </div>
-        <div class="summary-row summary-total">
-          <span>Total Amount:</span>
-          <span id="summaryTotal">₹0</span>
+        <!-- View Toggle Controls -->
+        <div class="view-controls">
+          <button id="gridViewBtn" class="view-btn active" title="Grid View">Grid View</button>
+          <button id="listViewBtn" class="view-btn" title="List View">List View</button>
         </div>
       </div>
 
-      <button type="submit" form="bookingForm" class="btn-book">Confirm Booking</button>
+      <!-- Team Filter Bar -->
+      <div class="filter-bar" id="filterBar">
+        <button class="filter-btn active" data-team="ALL">All Teams</button>
+        <button class="filter-btn" data-team="RCB">RCB</button>
+        <button class="filter-btn" data-team="CSK">CSK</button>
+        <button class="filter-btn" data-team="MI">MI</button>
+        <button class="filter-btn" data-team="KKR">KKR</button>
+        <button class="filter-btn" data-team="SRH">SRH</button>
+        <button class="filter-btn" data-team="RR">RR</button>
+      </div>
+
+      <!-- Match Cards Grid Container -->
+      <div class="match-grid" id="matchGrid">
+        <article class="match-card" data-teams="RCB CSK">
+          <div class="match-badge">Match 1 • Opening Clash</div>
+          <h3>RCB vs CSK</h3>
+          <p class="venue">M. Chinnaswamy Stadium, Bengaluru</p>
+          <p class="date-time">Sat, 28 Mar • 7:30 PM IST</p>
+          <a href="#booking" class="card-cta" data-match="RCB vs CSK (Chinnaswamy Stadium)">Select Match</a>
+        </article>
+
+        <article class="match-card" data-teams="MI KKR">
+          <div class="match-badge">Match 2 • Prime Time</div>
+          <h3>MI vs KKR</h3>
+          <p class="venue">Wankhede Stadium, Mumbai</p>
+          <p class="date-time">Sun, 29 Mar • 7:30 PM IST</p>
+          <a href="#booking" class="card-cta" data-match="MI vs KKR (Wankhede Stadium)">Select Match</a>
+        </article>
+
+        <article class="match-card" data-teams="SRH RR">
+          <div class="match-badge">Match 3 • Southern Derby</div>
+          <h3>SRH vs RR</h3>
+          <p class="venue">Rajiv Gandhi Intl. Stadium, Hyderabad</p>
+          <p class="date-time">Mon, 30 Mar • 7:30 PM IST</p>
+          <a href="#booking" class="card-cta" data-match="SRH vs RR (Rajiv Gandhi Stadium)">Select Match</a>
+        </article>
+
+        <article class="match-card" data-teams="RCB MI">
+          <div class="match-badge">Match 4 • Blockbuster</div>
+          <h3>RCB vs MI</h3>
+          <p class="venue">M. Chinnaswamy Stadium, Bengaluru</p>
+          <p class="date-time">Wed, 01 Apr • 7:30 PM IST</p>
+          <a href="#booking" class="card-cta" data-match="RCB vs MI (Chinnaswamy Stadium)">Select Match</a>
+        </article>
+
+        <article class="match-card" data-teams="CSK KKR">
+          <div class="match-badge">Match 5 • Rivalry Night</div>
+          <h3>CSK vs KKR</h3>
+          <p class="venue">MA Chidambaram Stadium, Chennai</p>
+          <p class="date-time">Fri, 03 Apr • 7:30 PM IST</p>
+          <a href="#booking" class="card-cta" data-match="CSK vs KKR (Chepauk Stadium)">Select Match</a>
+        </article>
+
+        <article class="match-card" data-teams="RR RCB">
+          <div class="match-badge">Match 6 • Weekend Special</div>
+          <h3>RR vs RCB</h3>
+          <p class="venue">Sawai Mansingh Stadium, Jaipur</p>
+          <p class="date-time">Sat, 04 Apr • 3:30 PM IST</p>
+          <a href="#booking" class="card-cta" data-match="RR vs RCB (Sawai Mansingh Stadium)">Select Match</a>
+        </article>
+      </div>
     </section>
+
+    <!-- Section 2: 3-Column CSS Grid Guidelines -->
+    <section id="guidelines" class="section">
+      <h2>Stadium Entry Guidelines</h2>
+      <div class="guidelines-grid">
+        <div class="guideline-card">
+          <div class="step-num">01</div>
+          <h3>Digital M-Ticket & ID</h3>
+          <p>Carry a valid government photo ID matching your booking name. Gates open 2.5 hours prior to the first ball.</p>
+        </div>
+
+        <div class="guideline-card">
+          <div class="step-num">02</div>
+          <h3>Prohibited Items</h3>
+          <p>Outside food, water bottles, power banks, helmets, bags, and professional cameras are strictly prohibited inside.</p>
+        </div>
+
+        <div class="guideline-card">
+          <div class="step-num">03</div>
+          <h3>Re-Entry & Seating</h3>
+          <p>Strict no re-entry policy once scanned out. Please occupy only the seat and stand tier printed on your ticket.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Interactive Ticket Booking & Live Summary -->
+    <section id="booking" class="section">
+      <h2>Book Match Tickets</h2>
+      <div class="booking-layout">
+        <!-- Booking Form Card -->
+        <div class="card">
+          <form id="bookingForm">
+            <div class="form-group">
+              <label for="matchSelect">Select Match</label>
+              <select id="matchSelect" name="match" required>
+                <option value="" disabled selected>-- Choose a Match --</option>
+                <option value="RCB vs CSK (Chinnaswamy Stadium)">RCB vs CSK — Bengaluru</option>
+                <option value="MI vs KKR (Wankhede Stadium)">MI vs KKR — Mumbai</option>
+                <option value="SRH vs RR (Rajiv Gandhi Stadium)">SRH vs RR — Hyderabad</option>
+                <option value="RCB vs MI (Chinnaswamy Stadium)">RCB vs MI — Bengaluru</option>
+                <option value="CSK vs KKR (Chepauk Stadium)">CSK vs KKR — Chennai</option>
+                <option value="RR vs RCB (Sawai Mansingh Stadium)">RR vs RCB — Jaipur</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="standSelect">Stand Category</label>
+              <select id="standSelect" name="stand" required>
+                <option value="" data-price="0" disabled selected>-- Choose Stand Category --</option>
+                <option value="General Stand" data-price="1200">General Stand — ₹1,200</option>
+                <option value="Pavilion Terrace" data-price="2500">Pavilion Terrace — ₹2,500</option>
+                <option value="Corporate Box" data-price="5000">Corporate Box — ₹5,000</option>
+                <option value="VIP Hospitality" data-price="8500">VIP Hospitality — ₹8,500</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="ticketQty">Ticket Quantity (Max 10)</label>
+              <input type="number" id="ticketQty" name="quantity" min="1" max="10" value="1" required />
+            </div>
+
+            <button type="submit" class="btn-book">Confirm Booking</button>
+          </form>
+        </div>
+
+        <!-- Booking Summary Card -->
+        <aside class="card" id="summaryCard">
+          <h3>Booking Summary</h3>
+          <div class="summary-item">
+            <span>Match:</span>
+            <span id="summaryMatch">Not selected</span>
+          </div>
+          <div class="summary-item">
+            <span>Stand Category:</span>
+            <span id="summaryStand">Not selected</span>
+          </div>
+          <div class="summary-item">
+            <span>Price per Ticket:</span>
+            <span id="summaryPrice">₹0</span>
+          </div>
+          <div class="summary-item">
+            <span>Quantity:</span>
+            <span id="summaryQty">1</span>
+          </div>
+          <div class="summary-total">
+            <span>Total Payable:</span>
+            <span id="summaryTotal">₹0</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
   </main>
 
-  <!-- Toast Notification Element -->
-  <div id="toast" role="status" aria-live="polite"></div>
+  <!-- Toast Notification -->
+  <div id="toast">Updated!</div>
 
   <script src="app.js"></script>
 </body>
