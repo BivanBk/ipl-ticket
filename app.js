@@ -1,128 +1,84 @@
-/* --- IPL 2027 Ticket Booking: Live Summary & Interactivity --- */
+// 1. Select Form Controls using DOM selectors (getElementById & querySelector)
+const bookingForm = document.getElementById('bookingForm');
+const matchSelect = document.getElementById('matchSelect');
+const standSelect = document.querySelector('#standSelect');
+const ticketQtyInput = document.querySelector('#ticketQty');
 
-document.addEventListener('DOMContentLoaded', () => {
-    const matchSelect = document.querySelector('#match-select');
-    const standSelect = document.querySelector('#stand-select');
-    const ticketQtyInput = document.querySelector('#ticket-qty');
-    const bookingForm = document.querySelector('#booking-form');
+// 2. Select Booking Summary Card display elements
+const summaryMatch = document.getElementById('summaryMatch');
+const summaryStand = document.getElementById('summaryStand');
+const summaryUnitPrice = document.getElementById('summaryUnitPrice');
+const summaryQty = document.getElementById('summaryQty');
+const summaryTotal = document.getElementById('summaryTotal');
 
-    const sumMatch = document.querySelector('#sum-match');
-    const sumStand = document.querySelector('#sum-stand');
-    const sumPrice = document.querySelector('#sum-price');
-    const sumQty = document.querySelector('#sum-qty');
-    const sumTotal = document.querySelector('#sum-total');
+// Select Toast element
+const toastEl = document.getElementById('toast');
+let toastTimeout;
 
-    // Pricing matrix matching the match schedule table
-    const pricingTable = {
-        'CSK vs MI': { General: 1000, Premium: 2500, VIP: 5000 },
-        'RCB vs KKR': { General: 1200, Premium: 3000, VIP: 6000 }
-    };
-
-    function getUnitPrice() {
-        if (!matchSelect || !standSelect) return 0;
-        const match = matchSelect.value;
-        const stand = standSelect.value;
-        if (pricingTable[match] && pricingTable[match][stand]) {
-            return pricingTable[match][stand];
-        }
-        return 0;
-    }
-
-    function updateLiveSummary() {
-        if (!matchSelect || !standSelect || !ticketQtyInput) return;
-
-        const match = matchSelect.value || 'Not Selected';
-        const stand = standSelect.value || 'Not Selected';
-        const qty = parseInt(ticketQtyInput.value) || 0;
-        const price = getUnitPrice();
-        const total = price * qty;
-
-        if (sumMatch) sumMatch.textContent = match;
-        if (sumStand) sumStand.textContent = stand;
-        if (sumPrice) sumPrice.textContent = price;
-        if (sumQty) sumQty.textContent = qty;
-        if (sumTotal) sumTotal.textContent = total;
-    }
-
-    // Event listeners for live updates
-    if (matchSelect) matchSelect.addEventListener('change', updateLiveSummary);
-    if (standSelect) standSelect.addEventListener('change', updateLiveSummary);
-    if (ticketQtyInput) ticketQtyInput.addEventListener('input', updateLiveSummary);
-
-    // Form Submission Handler
-    if (bookingForm) {
-        bookingForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const match = matchSelect.value;
-            const stand = standSelect.value;
-            const qty = parseInt(ticketQtyInput.value) || 1;
-            const price = getUnitPrice();
-            const total = price * qty;
-
-            const myBookingsTableBody = document.querySelector('#my-bookings tbody');
-            if (myBookingsTableBody) {
-                // Remove "No past bookings found." placeholder if present
-                const emptyRow = myBookingsTableBody.querySelector('td[colspan]');
-                if (emptyRow) {
-                    emptyRow.parentElement.remove();
-                }
-
-                const bookingId = 'IPL2027-' + Math.floor(1000 + Math.random() * 9000);
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td>${bookingId}</td>
-                    <td>${match}</td>
-                    <td>${stand}</td>
-                    <td>${qty}</td>
-                    <td>₹${total}</td>
-                    <td><span style="color: green; font-weight: bold;">Confirmed</span></td>
-                `;
-                myBookingsTableBody.appendChild(newRow);
-            }
-
-            showToast('Ticket booking confirmed successfully!');
-            bookingForm.reset();
-            updateLiveSummary();
-        });
-    }
-});
-
-// Reusable Toast Notification Function
+/**
+ * Displays a temporary toast message at the bottom-right corner
+ * @param {string} message - Notification text to display
+ */
 function showToast(message) {
-    const existingToast = document.querySelector('.toast-notification');
-    if (existingToast) existingToast.remove();
+  toastEl.textContent = message;
+  toastEl.classList.add('show');
 
-    const toast = document.createElement('div');
-    toast.className = 'toast-notification';
-    toast.innerText = message;
-
-    Object.assign(toast.style, {
-        position: 'fixed',
-        bottom: '30px',
-        right: '30px',
-        backgroundColor: '#00008b',
-        color: '#ff8c00',
-        padding: '14px 24px',
-        borderRadius: '8px',
-        boxShadow: '0 6px 20px rgba(0, 0, 0, 0.25)',
-        fontWeight: '600',
-        zIndex: '10000',
-        opacity: '0',
-        transition: 'opacity 0.3s ease, transform 0.3s ease',
-        transform: 'translateY(20px)'
-    });
-
-    document.body.appendChild(toast);
-
-    setTimeout(() => {
-        toast.style.opacity = '1';
-        toast.style.transform = 'translateY(0)';
-    }, 100);
-
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(20px)';
-        setTimeout(() => toast.remove(), 300);
-    }, 3500);
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => {
+    toastEl.classList.remove('show');
+  }, 2500);
 }
+
+/**
+ * Reads selected dropdowns and quantity input, calculates total,
+ * and updates the Booking Summary Card live.
+ */
+function updateBookingSummary() {
+  // Read selected match
+  const selectedMatch = matchSelect.value || 'Not selected';
+
+  // Read selected stand and its data-price attribute
+  const selectedStandOption = standSelect.options[standSelect.selectedIndex];
+  const selectedStandName = standSelect.value || 'Not selected';
+  const unitPrice = Number(selectedStandOption.getAttribute('data-price')) || 0;
+
+  // Read and sanitize quantity (ensure at least 1, max 10)
+  let quantity = parseInt(ticketQtyInput.value, 10);
+  if (isNaN(quantity) || quantity < 1) {
+    quantity = 1;
+    ticketQtyInput.value = 1;
+  } else if (quantity > 10) {
+    quantity = 10;
+    ticketQtyInput.value = 10;
+  }
+
+  // Calculate total price
+  const totalPrice = unitPrice * quantity;
+
+  // Update Booking Summary DOM elements
+  summaryMatch.textContent = selectedMatch;
+  summaryStand.textContent = selectedStandName;
+  summaryUnitPrice.textContent = `₹${unitPrice.toLocaleString('en-IN')}`;
+  summaryQty.textContent = quantity;
+  summaryTotal.textContent = `₹${totalPrice.toLocaleString('en-IN')}`;
+
+  // Confirm live update via toast notification
+  showToast('Booking summary updated!');
+}
+
+// 3. Add 'change' event listeners to form controls
+matchSelect.addEventListener('change', updateBookingSummary);
+standSelect.addEventListener('change', updateBookingSummary);
+ticketQtyInput.addEventListener('change', updateBookingSummary);
+
+// Optional: Prevent page reload on form submit and show confirmation toast
+bookingForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  if (!matchSelect.value || !standSelect.value) {
+    showToast('Please select both a match and a stand category.');
+    return;
+  }
+
+  showToast(`Confirmed! ${ticketQtyInput.value} ticket(s) booked for ${matchSelect.value}.`);
+});
